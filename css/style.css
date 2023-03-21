@@ -1,0 +1,33 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Century Gothic, CenturyGothic, AppleGothic, sans-serif;
+ 
+}
+
+ul,
+ol {
+    list-style: none;
+}
+
+a {
+    text-decoration: none;
+}
+
+
+/*Reseteo basico*/
+  
+/*NAV BAR*/
+
+.bi bi-cart4 {
+    font-size: 20;
+}
+
+.color-nav {
+    background-color:rgba(65, 196, 252, 0.633);
+}
+
+
+
+
