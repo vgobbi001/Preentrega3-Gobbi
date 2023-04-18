@@ -34,12 +34,34 @@ class ProductoController {
         })
     }
 
+    darEvantoAnadirCarrito() {
+        controladorProductos.listaProductos.forEach (producto => {
+            const productodelDOM = document.getElementById(`michiproducto${producto.id}`)
+        
+            productodelDOM.addEventListener("click",()=> {
+        
+                controladorCarrito.anadir(producto)
+                controladorCarrito.limpiarDOM()
+                //contenedor_carrito.innerHTML = " "
+                controladorCarrito.mostrarenDOM ()
+                controladorCarrito.mostrarPreciosEnDom ()
+          
+        
+            })
+        
+        })
+    }
+
 }
 
 class CarritoController {
     constructor () {
         this.listaCarrito = []
-        
+        this.contenedor_carrito = document.getElementById("contenedor_carrito")
+        this.precio = document.getElementById("precio")
+        this.precio_con_iva = document.getElementById("precio_con_iva")
+        //this.finalizar_compra = document.getElementById ("finalizar_compra")
+          
     }
 
 
@@ -68,9 +90,17 @@ class CarritoController {
 
 
     anadir(producto) {
-        //this.listaCarrito.some(elemento => elemento.id == producto.id)
+        let existeProducto = this.listaCarrito.some(elemento => elemento.id == producto.id)
 
-        this.listaCarrito.push(producto)
+        if (existeProducto){ 
+            const productoEncontrado = this.buscar(producto.id)
+            productoEncontrado.cantidad += 1 
+
+        } else {
+            this.listaCarrito.push(producto)
+        }
+
+      
 
         let arrformatoJSON = JSON.stringify(this.listaCarrito)
 
@@ -78,44 +108,61 @@ class CarritoController {
 
     }
 
-    mostrarenDOM (contenedor_carrito) {
-        //limpio contenedor
-        contenedor_carrito.innerHTML = ""
-        //muestro todo
-        this.listaCarrito.forEach (producto => {
-            contenedor_carrito.innerHTML += `
-                <div class="card mb-3" style="max-width: 540px;">
-                    <div class="row g-0">
-                        <div class="col-md-4">
-                            <img src="${producto.img}" class="img-fluid rounded-start" alt="${producto.alt}">
-                        </div>
-                        <div class="col-md-8">
-                            <div class="card-body">
-                                <h5 class="card-title">${producto.nombre}</h5>
-                                <button id="borrar${producto.id}"> <i class="bi bi-trash-fill"></i> </button>
-                                <p class="card-text">$ ${producto.precio}</p>
-                                <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
-                            </div>
-                        </div>
+    cardHTML(producto) {
+        return `
+        <div class="card mb-3" style="max-width: 540px;">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img src="${producto.img}" class="img-fluid rounded-start" alt="${producto.alt}">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">${producto.nombre}</h5>
+                        <button id="borrar${producto.id}"> <i class="bi bi-trash-fill"></i> </button>
+                        <p class="card-text">$ ${producto.precio}</p>
+                        <p class="card-text">Cantidad: ${producto.cantidad}</p>
+                        <p class="card-text"><small class="text-muted">Last updated 3 mins ago</small></p>
                     </div>
                 </div>
-            `
+            </div>
+        </div>
+    `
+    }
+
+        
+    limpiarDOM (contenedor_carrito){
+        this.contenedor_carrito.innerHTML = ""
+    }
+
+    mostrarenDOM () {
+
+         //limpio contenedor
+        this.limpiarDOM()
+       
+        //muestro todo
+        this.listaCarrito.forEach (producto => {
+            this.contenedor_carrito.innerHTML += this.cardHTML(producto)
 
          })
 
-         this.listaCarrito.forEach (producto=> {
+         this.darEventoBorrar()
+    }
+
+    darEventoBorrar() {
+        this.listaCarrito.forEach (producto=> {
             document.getElementById (`borrar${producto.id}`).addEventListener("click", () => {
                 this.borrar ()
                 localStorage.setItem("listaCarrito", JSON.stringify(this.listaCarrito))
-                this.mostrarenDOM(contenedor_carrito)
+                this.mostrarenDOM()
+                this.mostrarPreciosEnDom()
             })
             
          })
     }
 
-    mostrarPreciosEnDom (precio, precio_con_iva) {
-      precio.innerHTML = this.calcularTotal ()
-      precio_con_iva.innerHTML = "$"+this.calcularPrecioConIVA ()
+    mostrarPreciosEnDom () {
+      this.precio.innerHTML = this.calcularTotal ()
+      this.precio_con_iva.innerHTML = "$"+this.calcularPrecioConIVA ()
     }
 
     calcularTotal (){
@@ -125,6 +172,20 @@ class CarritoController {
     calcularPrecioConIVA() {
        return this.calcularTotal() * 1.21
     }
+
+    buscar(id){
+        return this.listaCarrito.find(producto => producto.id == id)
+    }
+
+    //finalizar_compra () {
+        //this.finalizar_compra.addEventListener("click", () => {
+
+            //this.limpiar()
+          //  this.mostrarenDOM()
+        //    this.mostrarPreciosEnDom()
+        
+      //  })
+    //}
 
 }
 
@@ -137,17 +198,14 @@ const controladorCarrito = new CarritoController()
 controladorProductos.levantar ()
 const levantoAlgo = controladorCarrito.levantar()
 
-
-
-
 /*la constante como el id son unicos*/
 
 //DOM
 
 const contenedor_productos = document.getElementById("contenedor_productos")
-const contenedor_carrito = document.getElementById("contenedor_carrito")
-const precio = document.getElementById("precio")
-const precio_con_iva = document.getElementById("precio_con_iva")
+// const contenedor_carrito = document.getElementById("contenedor_carrito")
+// const precio = document.getElementById("precio")
+// const precio_con_iva = document.getElementById("precio_con_iva")
 
 if(levantoAlgo){
     controladorCarrito.mostrarPreciosEnDom(precio, precio_con_iva)    
@@ -155,34 +213,23 @@ if(levantoAlgo){
 
 //DOM
 controladorProductos.mostrarenDOM(contenedor_productos)
-controladorCarrito.mostrarenDOM(contenedor_carrito)
+controladorCarrito.mostrarenDOM()
+controladorProductos.darEvantoAnadirCarrito(controladorCarrito)
 
 
-//eventos
-controladorProductos.listaProductos.forEach (producto => {
-    const productoXanadir = document.getElementById(`michiproducto${producto.id}`)
 
-    productoXanadir.addEventListener("click",()=> {
+const finalizar_compra = document.getElementById ("finalizar_compra")
 
-        controladorCarrito.anadir(producto)
-        controladorCarrito.levantar()
-        //contenedor_carrito.innerHTML = " "
-        controladorCarrito.mostrarenDOM (contenedor_carrito)
-        controladorCarrito.mostrarPreciosEnDom (precio, precio_con_iva)
-  
-
-    })
-
-})
-
-const finalizar_compra = document.getElementById("finalizar_compra")
-
-finalizar_compra.addEventListener("click", () => {
+// controladorCarrito.finalizar_compra()
+this.finalizar_compra.addEventListener("click", () => {
 
     controladorCarrito.limpiar()
-    controladorCarrito.mostrarenDOM(contenedor_carrito)
-    controladorCarrito.mostrarPreciosEnDom(precio, precio_con_iva)
+    controladorCarrito.mostrarenDOM()
+    controladorCarrito.mostrarPreciosEnDom()
 
-})
+ })
 
-//no me funciona el calculo del iva me quede en minuto 24 
+//eventos
+
+
+
