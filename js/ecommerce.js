@@ -1,27 +1,21 @@
+/* fetch('./APIcasera.json')
+    .then(response => response.json())
+    .then(listaProductos => console.log(listaProductos))
+    */
+
 class ProductoController {
     constructor () {
         this.listaProductos = []
+        this.contenedor_productos = document.getElementById("contenedor_productos")
     }
 
     //lo convierto  a metodo, se levantan productos del DOM
-
-    levantar () {
-    
-        let obtenerListaJSON = localStorage.getItem("listaProductos")
-
-        if(obtenerListaJSON){
-            this.listaProductos = JSON.parse(obtenerListaJSON)
-            
-        }
-        
-    }
-
     mostrarenDOM(contenedor_productos) {
         //limpio contenedor
-        contenedor_productos.innerHTML = ""
+        //contenedor_productos.innerHTML = ""
 
         this.listaProductos.forEach ( producto => {
-            contenedor_productos.innerHTML += `
+            this.contenedor_productos.innerHTML += `
                 <div class="card" style="width: 18rem;">
                     <img src="${producto.img}" class="card-img-top" alt="${producto.alt}">
                     <div class="card-body">
@@ -34,6 +28,40 @@ class ProductoController {
         })
     }
 
+    /*levantarJSON () {
+        fetch("./APIcasera.json")
+        .then(resp => resp.json())
+        .then(listaProductos => 
+            
+            listaProductos.forEach(producto => {
+            contenedor_productos.innerHTML += `
+                <div class="card" style="width: 18rem;">
+                    <img src="${producto.img}" class="card-img-top" alt="${producto.alt}">
+                    <div class="card-body">
+                        <h5 class="card-title"> ${producto.nombre}</h5>
+                        <p class="card-text">$ ${producto.precio}</p>
+                        <a href="#" class="btn btn-primary" id="michiproducto${producto.id}">Añadir al carrito</a>
+                    </div>
+                </div>  `
+            }))
+    }*/
+
+    async levantarJSON (controladorCarrito)  {
+        let res = await fetch("./APIcasera.json")
+        this.listaProductos = await res.json()
+        this.mostrarenDOM()
+        this.darEvantoAnadirCarrito(controladorCarrito)
+    }
+    
+    /*let obtenerListaJSON = localStorage.getItem("listaProductos")
+
+    if(obtenerListaJSON){
+        this.listaProductos = JSON.parse(obtenerListaJSON)
+        
+    }*/
+        
+
+    
     darEvantoAnadirCarrito() {
         controladorProductos.listaProductos.forEach (producto => {
             const productodelDOM = document.getElementById(`michiproducto${producto.id}`)
@@ -177,15 +205,15 @@ class CarritoController {
         return this.listaCarrito.find(producto => producto.id == id)
     }
 
-    //finalizar_compra () {
-        //this.finalizar_compra.addEventListener("click", () => {
+    /*finalizar_compra () {
+        this.finalizar_compra.addEventListener("click", () => {
 
-            //this.limpiar()
-          //  this.mostrarenDOM()
-        //    this.mostrarPreciosEnDom()
+            this.limpiar()
+            this.mostrarenDOM()
+            this.mostrarPreciosEnDom()
         
-      //  })
-    //}
+        })
+    }*/
 
 }
 
@@ -195,7 +223,7 @@ const controladorProductos = new ProductoController ()
 const controladorCarrito = new CarritoController()
 
 //storage
-controladorProductos.levantar ()
+
 const levantoAlgo = controladorCarrito.levantar()
 
 /*la constante como el id son unicos*/
@@ -211,16 +239,16 @@ if(levantoAlgo){
     controladorCarrito.mostrarPreciosEnDom(precio, precio_con_iva)    
 } 
 
+controladorProductos.levantarJSON (controladorCarrito)
+
 //DOM
-controladorProductos.mostrarenDOM(contenedor_productos)
+
 controladorCarrito.mostrarenDOM()
-controladorProductos.darEvantoAnadirCarrito(controladorCarrito)
 
+const finalizar_compra = document.getElementById ("finalizar_compra") 
 
+//controladorCarrito.finalizar_compra()
 
-const finalizar_compra = document.getElementById ("finalizar_compra")
-
-// controladorCarrito.finalizar_compra()
 this.finalizar_compra.addEventListener("click", () => {
 
     controladorCarrito.limpiar()

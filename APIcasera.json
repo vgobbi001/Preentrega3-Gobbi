@@ -1,0 +1,73 @@
+[
+    {
+        "id": 1,
+        "nombre": "Comedero automático PRO",
+        "precio": 25000,
+        "stock": 10,
+        "cantidad": 1,
+        "img": "./images/comedero-automatico-para-gatos.jpg"
+    },
+    {
+        "id": 2,
+        "nombre": "Comedero automático PRO EXCELLENT",
+        "precio": 35000,
+        "stock": 10,
+        "cantidad": 1,
+        "img": "./images/comedero-automatico-pro.jpg",
+        "alt": "imagen producto"
+    },
+    {
+        "id": 3,
+        "nombre": "Fuente de agua para gatos 1L.",
+        "precio": 11000,
+        "stock": 10,
+        "cantidad": 1,
+        "img": "./images/fuente-gatos-aguita.jpg",
+        "alt": "imagen producto"
+    },
+    {
+        "id": 4,
+        "nombre": "Moisés stardard",
+        "precio": 8000,
+        "stock": 10,
+        "cantidad": 1,
+        "img": "./images/moises-gatos-comun.jpg",
+        "alt": "imagen producto"
+    },
+    {
+        "id": 5,
+        "nombre": "Moisés cueva",
+        "precio": 9500,
+        "stock": 10,
+        "cantidad": 1,
+        "img": "./images/moises-gatos-cueva.jpg",
+        "alt": "imagen producto"
+    },
+    {
+        "id": 6,
+        "nombre": "Moisés cueva profunda",
+        "precio": 14500,
+        "stock": 10,
+        "cantidad": 1,
+        "img": "./images/moises-gatos-cuevapro.jpg",
+        "alt": "imagen producto"
+    },
+    {
+        "id": 7,
+        "nombre": "Rascador cartón",
+        "precio": 1500,
+        "stock": 10,
+        "cantidad": 1,
+        "img": "./images/rascador-carton.jpg",
+        "alt": "imagen producto"
+    },
+    {
+        "id": 8,
+        "nombre": "Rascador tubo con juguete",
+        "precio": 6500,
+        "stock": 10,
+        "cantidad": 1,
+        "img": "./images/rascador-tubo.jpg",
+        "alt": "imagen producto"
+    }
+]
